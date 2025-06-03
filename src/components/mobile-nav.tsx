@@ -3,10 +3,18 @@ import { createPortal } from "react-dom"
 import { Menu, X } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { ThemeToggle } from "@/components/theme-toggle"
-import { Link } from "react-router-dom"
+import { Link, useLocation } from "react-router-dom"
 
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
+  const location = useLocation()
+
+  const isActive = (path: string) => {
+    if (path === "/") {
+      return location.pathname === "/"
+    }
+    return location.pathname.startsWith(path)
+  }
 
   // Only render portal in browser
   const portalRoot = typeof window !== "undefined" ? document.body : null
@@ -47,13 +55,13 @@ export function MobileNav() {
             </div>
             <nav className="flex-1 p-6">
               <div className="flex flex-col space-y-4">
-                <Button asChild variant="ghost" className="justify-start w-full">
+                <Button asChild variant="ghost" className={`justify-start w-full ${isActive("/") ? "bg-accent text-accent-foreground" : ""}`}>
                   <Link to="/" onClick={() => setIsOpen(false)}>Home</Link>
                 </Button>
-                <Button asChild variant="ghost" className="justify-start w-full">
+                <Button asChild variant="ghost" className={`justify-start w-full ${isActive("/games") ? "bg-accent text-accent-foreground" : ""}`}>
                   <Link to="/games" onClick={() => setIsOpen(false)}>Games</Link>
                 </Button>
-                <Button asChild variant="ghost" className="justify-start w-full">
+                <Button asChild variant="ghost" className={`justify-start w-full ${isActive("/about") ? "bg-accent text-accent-foreground" : ""}`}>
                   <Link to="/about" onClick={() => setIsOpen(false)}>About</Link>
                 </Button>
                 <Button asChild className="w-full mt-4">

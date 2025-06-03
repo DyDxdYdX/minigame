@@ -1,27 +1,74 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 
 interface SudokuGridProps {
+  initialPuzzle: number[][];
   selectedTool: number | 'eraser' | null;
-  // We might add more props later, like the initial puzzle or a callback for when the grid is solved
+  setSelectedTool: React.Dispatch<React.SetStateAction<number | 'eraser' | null>>;
+  validationErrors: boolean[][];
+  gridData: number[][];
+  setGridData: React.Dispatch<React.SetStateAction<number[][]>>;
+  isHelperMode: boolean;
+  activeCell: {row: number, col: number} | null;
+  setActiveCell: React.Dispatch<React.SetStateAction<{row: number, col: number} | null>>;
 }
 
-const SudokuGrid: React.FC<SudokuGridProps> = ({ selectedTool }) => {
-  // Initialize a 9x9 grid with all zeros (empty cells)
-  const initialGrid = Array(9).fill(null).map(() => Array(9).fill(0));
-  const [gridData, setGridData] = useState<number[][]>(initialGrid);
+const SudokuGrid: React.FC<SudokuGridProps> = ({ 
+  initialPuzzle, 
+  selectedTool, 
+  setSelectedTool, 
+  validationErrors, 
+  gridData, 
+  setGridData,
+  isHelperMode,
+  activeCell,
+  setActiveCell
+}) => {
+  // Store the original puzzle to know which cells are pre-filled
+  const originalPuzzle = initialPuzzle;
 
-  // TODO: Later, we'll need to load an actual puzzle here instead of all zeros
-  // and differentiate between pre-filled numbers and user-entered numbers.
+  // Helper function to check if a cell is in the same row, column, or 3x3 box as the active cell
+  const isHighlighted = (rowIndex: number, colIndex: number) => {
+    if (!isHelperMode || !activeCell) return false;
+    
+    const { row: activeRow, col: activeCol } = activeCell;
+    
+    // Same row or column
+    if (rowIndex === activeRow || colIndex === activeCol) return true;
+    
+    // Same 3x3 box
+    const boxStartRow = Math.floor(activeRow / 3) * 3;
+    const boxStartCol = Math.floor(activeCol / 3) * 3;
+    const boxEndRow = boxStartRow + 2;
+    const boxEndCol = boxStartCol + 2;
+    
+    return rowIndex >= boxStartRow && rowIndex <= boxEndRow && 
+           colIndex >= boxStartCol && colIndex <= boxEndCol;
+  };
 
   const handleCellClick = (rowIndex: number, colIndex: number) => {
+    // Set active cell for highlighting
+    if (isHelperMode) {
+      setActiveCell({ row: rowIndex, col: colIndex });
+      
+      // Auto-select the number if helper mode is enabled and cell has a value
+      // BUT only if we're not trying to erase
+      const cellValue = gridData[rowIndex][colIndex];
+      if (cellValue !== 0 && selectedTool !== 'eraser') {
+        setSelectedTool(cellValue);
+        return; // Exit early if we're just selecting the number
+      }
+    }
+
+    // Prevent changing pre-filled numbers from the original puzzle
+    if (originalPuzzle[rowIndex][colIndex] !== 0) {
+      return; // Cell is part of the initial puzzle, do not modify
+    }
+
     if (typeof selectedTool === 'number') {
-      // For now, allow overwriting any cell. 
-      // Later, we'll need to check if the cell is part of the initial puzzle.
-      const newGridData = gridData.map(row => [...row]); // Create a new copy for immutability
+      const newGridData = gridData.map(row => [...row]);
       newGridData[rowIndex][colIndex] = selectedTool;
       setGridData(newGridData);
     } else if (selectedTool === 'eraser') {
-      // Logic for eraser will be added in the next step
       const newGridData = gridData.map(row => [...row]);
       newGridData[rowIndex][colIndex] = 0; // Assuming 0 means empty
       setGridData(newGridData);
@@ -33,9 +80,22 @@ const SudokuGrid: React.FC<SudokuGridProps> = ({ selectedTool }) => {
     <div className="grid grid-cols-9 gap-0.5 bg-border p-1 w-max mx-auto rounded-lg shadow-md">
       {gridData.map((row, rowIndex) =>
         row.map((cellValue: number, colIndex: number) => {
-          let cellClassName = `w-12 h-12 flex items-center justify-center text-xl font-semibold 
-                             bg-card text-card-foreground 
-                             hover:bg-muted/70 cursor-pointer transition-colors duration-150`;
+          const isPrefilled = originalPuzzle[rowIndex][colIndex] !== 0;
+          const isSelectedNumber = typeof selectedTool === 'number' && cellValue !== 0 && cellValue === selectedTool;
+          const hasError = validationErrors[rowIndex][colIndex];
+          const isActiveCell = activeCell?.row === rowIndex && activeCell?.col === colIndex;
+          const isHighlightedCell = isHighlighted(rowIndex, colIndex);
+
+          let cellClassName = `w-12 h-12 flex items-center justify-center text-xl 
+                             ${isPrefilled ? 'font-bold text-foreground' : 'font-semibold text-blue-600 dark:text-blue-400'} 
+                             bg-card 
+                             ${isActiveCell ? 'bg-amber-200 dark:bg-amber-800/50' : ''} 
+                             ${isHighlightedCell && !isActiveCell ? 'bg-amber-100 dark:bg-amber-900/30' : ''} 
+                             ${isSelectedNumber && !isActiveCell && !isHighlightedCell ? 'bg-primary/20 dark:bg-primary/30' : ''} 
+                             ${!isActiveCell && !isHighlightedCell && !isSelectedNumber ? 'hover:bg-muted/70' : ''} 
+                             ${isPrefilled ? 'cursor-default' : 'cursor-pointer'} 
+                             ${hasError ? 'text-red-500 dark:text-red-400' : ''}
+                             transition-colors duration-150`;
 
           // Thick right border for 3x3 subgrids (but not for the last column)
           if ((colIndex + 1) % 3 === 0 && colIndex < 8) {
