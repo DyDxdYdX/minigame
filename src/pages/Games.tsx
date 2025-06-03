@@ -10,7 +10,7 @@ function Games() {
       title: "Sudoku",
       description: "Challenge your logical thinking with this classic number puzzle game. Fill the 9x9 grid following the rules of Sudoku.",
       icon: Grid,
-      difficulty: "Medium",
+      difficulty: "Easy, Medium, Hard",
       category: "Puzzle"
     },
     {

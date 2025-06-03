@@ -2,9 +2,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import SudokuGrid from '../../components/SudokuGrid';
 import { getRandomPuzzle, type Difficulty } from '../../data/sudoku-puzzles';
 import { Button } from "@/components/ui/button";
-import { Eraser, Star, StarHalf, StarOff } from 'lucide-react';
+import { Eraser, Star, StarHalf, StarOff, Info, ArrowLeft } from 'lucide-react';
 import * as SwitchPrimitives from "@radix-ui/react-switch";
 import { cn } from "@/lib/utils";
+import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,6 +16,14 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+
+// Import images
+import highlightErrorsImg from '../../assets/images/sudoku/highlight-error.png';
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
@@ -42,20 +51,36 @@ const SudokuPage: React.FC = () => {
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [currentPuzzle, setCurrentPuzzle] = useState(() => getRandomPuzzle('easy'));
   const [gridData, setGridData] = useState<number[][]>(JSON.parse(JSON.stringify(getRandomPuzzle('easy').puzzle)));
-  const [isValidationEnabled, setIsValidationEnabled] = useState(true);
-  const [isHelperMode, setIsHelperMode] = useState(true);
-  const [activeCell, setActiveCell] = useState<{row: number, col: number} | null>(null);
+  const [isValidationEnabled, setIsValidationEnabled] = useState(false);
   const [validationErrors, setValidationErrors] = useState<boolean[][]>(Array(9).fill(null).map(() => Array(9).fill(false)));
   const [isCongratsDialogOpen, setIsCongratsDialogOpen] = useState(false);
   const [isIncompleteDialogOpen, setIsIncompleteDialogOpen] = useState(false);
+  const [isClearAllDialogOpen, setIsClearAllDialogOpen] = useState(false);
+  const [isExitDialogOpen, setIsExitDialogOpen] = useState(false);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     setGridData(JSON.parse(JSON.stringify(currentPuzzle.puzzle)));
   }, [currentPuzzle]);
 
   const handleNumberSelect = (number: number | 'eraser') => {
-    setSelectedTool(number);
-    setActiveCell(null);
+    // Toggle selection - if already selected, deselect it
+    setSelectedTool(selectedTool === number ? null : number);
+  };
+
+  const handleClearAll = () => {
+    // Reset grid to original puzzle state (keep pre-filled numbers, clear user entries)
+    const clearedGrid = JSON.parse(JSON.stringify(currentPuzzle.puzzle));
+    setGridData(clearedGrid);
+    setSelectedTool(null);
+    setValidationErrors(Array(9).fill(null).map(() => Array(9).fill(false)));
+    setIsClearAllDialogOpen(false);
+  };
+
+  const handleExit = () => {
+    navigate('/games');
+    setIsExitDialogOpen(false);
   };
 
   const handleNewGame = (newDifficulty: Difficulty) => {
@@ -64,7 +89,6 @@ const SudokuPage: React.FC = () => {
     setCurrentPuzzle(newPuzzle);
     setGridData(JSON.parse(JSON.stringify(newPuzzle.puzzle)));
     setSelectedTool(null);
-    setActiveCell(null);
     setValidationErrors(Array(9).fill(null).map(() => Array(9).fill(false)));
     setIsCongratsDialogOpen(false);
     setIsIncompleteDialogOpen(false);
@@ -132,6 +156,19 @@ const SudokuPage: React.FC = () => {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      {/* Exit Button */}
+      <div className="mb-6">
+        <Button 
+          onClick={() => setIsExitDialogOpen(true)}
+          variant="outline" 
+          size="sm" 
+          className="gap-2"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          Back to Games
+        </Button>
+      </div>
+
       <h1 className="text-3xl font-bold text-center mb-8">Sudoku</h1>
       
       <div className="flex flex-col items-center gap-8">
@@ -162,45 +199,49 @@ const SudokuPage: React.FC = () => {
             ))}
           </div>
 
+          {/* Validation Mode, Default is disabled */}
           <div className="flex flex-col sm:flex-row items-center gap-4">
-            <div className="flex items-center gap-2">
-              <Switch
-                id="validation-mode"
-                checked={isValidationEnabled}
-                onCheckedChange={setIsValidationEnabled}
-              />
-              <label 
-                htmlFor="validation-mode" 
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Highlight Errors
-              </label>
-            </div>
-            <div className="flex items-center gap-2">
-              <Switch
-                id="helper-mode"
-                checked={isHelperMode}
-                onCheckedChange={setIsHelperMode}
-              />
-              <label 
-                htmlFor="helper-mode" 
-                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-              >
-                Grid Guide
-              </label>
-            </div>
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <div className="flex items-center gap-2 cursor-help">
+                  <Switch
+                    id="validation-mode"
+                    checked={isValidationEnabled}
+                    onCheckedChange={setIsValidationEnabled}
+                  />
+                  <label 
+                    htmlFor="validation-mode" 
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-help"
+                  >
+                    Highlight Errors
+                  </label>
+                  <Info className="w-3 h-3 text-muted-foreground" />
+                </div>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-64">
+                <div className="space-y-3">
+                  <h4 className="text-sm font-semibold">Highlight Errors</h4>
+                  <div className="flex flex-col items-center space-y-2">
+                    <img 
+                      src={highlightErrorsImg} 
+                      alt="Highlight Errors Preview" 
+                      className="w-32 h-32 rounded-md border object-contain"
+                    />
+                    <p className="text-xs text-muted-foreground text-center">
+                      Shows invalid numbers highlighted in red
+                    </p>
+                  </div>
+                </div>
+              </HoverCardContent>
+            </HoverCard>
           </div>
 
           <SudokuGrid 
             initialPuzzle={currentPuzzle.puzzle}
             selectedTool={selectedTool}
-            setSelectedTool={setSelectedTool}
             validationErrors={validationErrors}
             gridData={gridData}
             setGridData={setGridData}
-            isHelperMode={isHelperMode}
-            activeCell={activeCell}
-            setActiveCell={setActiveCell}
           />
           
           <div className="flex gap-2 flex-wrap justify-center">
@@ -226,14 +267,25 @@ const SudokuPage: React.FC = () => {
             </Button>
           </div>
 
-          <Button 
-            onClick={handleSubmit}
-            variant="default"
-            size="lg"
-            className="mt-4 min-w-[150px]"
-          >
-            Submit Solution
-          </Button>
+          <div className="flex gap-2 justify-center">
+            <Button 
+              onClick={handleSubmit}
+              variant="default"
+              size="lg"
+              className="min-w-[150px]"
+            >
+              Submit Solution
+            </Button>
+            
+            <Button 
+              onClick={() => setIsClearAllDialogOpen(true)}
+              variant="destructive"
+              size="lg"
+              className="min-w-[100px]"
+            >
+              Clear All
+            </Button>
+          </div>
 
         </div>
 
@@ -288,6 +340,43 @@ const SudokuPage: React.FC = () => {
             <AlertDialogFooter>
               <AlertDialogAction onClick={() => setIsIncompleteDialogOpen(false)}>
                 Continue Playing
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Exit Confirmation AlertDialog */}
+        <AlertDialog open={isExitDialogOpen} onOpenChange={setIsExitDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Exit Game?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to leave? Your current progress will be lost.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Continue Playing</AlertDialogCancel>
+              <AlertDialogAction onClick={handleExit}>
+                Exit Game
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Clear All Confirmation AlertDialog */}
+        <AlertDialog open={isClearAllDialogOpen} onOpenChange={setIsClearAllDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Clear All Entries?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This will remove all your entered numbers and reset the puzzle to its original state. 
+                This action cannot be undone.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleClearAll} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                Clear All
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
