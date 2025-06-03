@@ -57,6 +57,7 @@ minigame/
 ├── tsconfig.json            # TypeScript configuration
 └── .eslintrc.cjs            # ESLint configuration
 ```
+- For each game pages, component, data, create new directory
 
 ## Current Features
 - **Sudoku Game**: Complete implementation with 3 difficulty levels (Easy, Medium, Hard)

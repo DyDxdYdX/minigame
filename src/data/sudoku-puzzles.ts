@@ -1,6 +1,6 @@
-import easyPuzzles from './sudoku_easy.json';
-import mediumPuzzles from './sudoku_medium.json';
-import hardPuzzles from './sudoku_hard.json';
+import easyPuzzles from './sudoku/sudoku_easy.json';
+import mediumPuzzles from './sudoku/sudoku_medium.json';
+import hardPuzzles from './sudoku/sudoku_hard.json';
 
 export interface SudokuPuzzle {
   puzzle: number[][];
