@@ -16,9 +16,9 @@ function Games() {
     {
       id: "minesweeper",
       title: "Minesweeper",
-      description: "Test your deduction skills in this classic game. Clear the board without hitting any mines!",
+      description: "Test your deduction skills in this classic game. Clear the board without hitting any mines! Three difficulty levels available.",
       icon: Gamepad2,
-      difficulty: "Easy",
+      difficulty: "Beginner, Intermediate, Expert",
       category: "Strategy"
     },
     {

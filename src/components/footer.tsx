@@ -21,6 +21,9 @@ export function Footer() {
                     <FontAwesomeIcon icon={faInstagram} className="w-6 h-6" />
                 </a>
                 </div>
+                <div className="text-sm text-muted-foreground text-center">
+                    For the best experience, please use a computer or laptop with a big screen
+                </div>
                 <div className="text-sm text-muted-foreground">
                 © {new Date().getFullYear()} Dexter Dykes Timothy. All rights reserved.
                 </div>
