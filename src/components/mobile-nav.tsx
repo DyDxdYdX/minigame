@@ -71,7 +71,7 @@ export function MobileNav() {
             </nav>
             <div className="p-6 border-t">
               <p className="text-sm text-muted-foreground">
-                © 2024 minigame by DyDxSoft
+                © {new Date().getFullYear()} Dexter Dykes Timothy. All rights reserved.
               </p>
             </div>
           </aside>
