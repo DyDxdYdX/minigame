@@ -21,6 +21,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 // Import images
 import highlightErrorsImg from '../../assets/images/sudoku/highlight-error.png';
@@ -155,233 +156,239 @@ const SudokuPage: React.FC = () => {
   }, [gridData, isValidationEnabled, validateSudoku]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Exit Button */}
-      <div className="mb-6">
-        <Button 
-          onClick={() => setIsExitDialogOpen(true)}
-          variant="outline" 
-          size="sm" 
-          className="gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Games
-        </Button>
-      </div>
-
-      <h1 className="text-3xl font-bold text-center mb-8">Sudoku</h1>
-      
-      <div className="flex flex-col items-center gap-8">
-        <div className="flex flex-col items-center gap-4">
-          <Button 
-            onClick={() => handleNewGame(difficulty)} 
-            variant="default" 
-            size="lg"
-            className="min-w-[120px]"
-          >
-            New Game
-          </Button>
-          <div className="flex gap-2">
-            {(['easy', 'medium', 'hard'] as const).map((diff) => (
-              <Button
-                key={diff}
-                onClick={() => handleNewGame(diff)}
-                variant={difficulty === diff ? 'default' : 'outline'}
-                size="sm"
-                className={`capitalize min-w-[100px] gap-2 transition-all duration-200
-                  ${difficulty === diff 
-                    ? 'shadow-md scale-105' 
-                    : 'hover:scale-105 hover:shadow-sm'}`}
-              >
-                {getDifficultyIcon(diff)}
-                {diff}
-              </Button>
-            ))}
+    <div className="min-h-screen flex flex-col">
+      <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto py-4">
+          <div className="flex items-center justify-between">
+            <Button 
+              onClick={() => setIsExitDialogOpen(true)}
+              variant="ghost" 
+              size="sm" 
+              className="gap-2"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Back to Games
+            </Button>
+            <ThemeToggle />
           </div>
+        </div>
+      </header>
 
-          {/* Validation Mode, Default is disabled */}
-          <div className="flex flex-col sm:flex-row items-center gap-4">
-            <HoverCard>
-              <HoverCardTrigger asChild>
-                <div className="flex items-center gap-2 cursor-help">
-                  <Switch
-                    id="validation-mode"
-                    checked={isValidationEnabled}
-                    onCheckedChange={setIsValidationEnabled}
-                  />
-                  <label 
-                    htmlFor="validation-mode" 
-                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-help"
-                  >
-                    Highlight Errors
-                  </label>
-                  <Info className="w-3 h-3 text-muted-foreground" />
-                </div>
-              </HoverCardTrigger>
-              <HoverCardContent className="w-64">
-                <div className="space-y-3">
-                  <h4 className="text-sm font-semibold">Highlight Errors</h4>
-                  <div className="flex flex-col items-center space-y-2">
-                    <img 
-                      src={highlightErrorsImg} 
-                      alt="Highlight Errors Preview" 
-                      className="w-32 h-32 rounded-md border object-contain"
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">Sudoku</h1>
+        
+        <div className="flex flex-col items-center gap-8">
+          <div className="flex flex-col items-center gap-4">
+            <Button 
+              onClick={() => handleNewGame(difficulty)} 
+              variant="default" 
+              size="lg"
+              className="min-w-[120px]"
+            >
+              New Game
+            </Button>
+            <div className="flex gap-2">
+              {(['easy', 'medium', 'hard'] as const).map((diff) => (
+                <Button
+                  key={diff}
+                  onClick={() => handleNewGame(diff)}
+                  variant={difficulty === diff ? 'default' : 'outline'}
+                  size="sm"
+                  className={`capitalize min-w-[100px] gap-2 transition-all duration-200
+                    ${difficulty === diff 
+                      ? 'shadow-md scale-105' 
+                      : 'hover:scale-105 hover:shadow-sm'}`}
+                >
+                  {getDifficultyIcon(diff)}
+                  {diff}
+                </Button>
+              ))}
+            </div>
+
+            {/* Validation Mode, Default is disabled */}
+            <div className="flex flex-col sm:flex-row items-center gap-4">
+              <HoverCard>
+                <HoverCardTrigger asChild>
+                  <div className="flex items-center gap-2 cursor-help">
+                    <Switch
+                      id="validation-mode"
+                      checked={isValidationEnabled}
+                      onCheckedChange={setIsValidationEnabled}
                     />
-                    <p className="text-xs text-muted-foreground text-center">
-                      Shows invalid numbers highlighted in red
-                    </p>
+                    <label 
+                      htmlFor="validation-mode" 
+                      className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-help"
+                    >
+                      Highlight Errors
+                    </label>
+                    <Info className="w-3 h-3 text-muted-foreground" />
                   </div>
-                </div>
-              </HoverCardContent>
-            </HoverCard>
-          </div>
+                </HoverCardTrigger>
+                <HoverCardContent className="w-64">
+                  <div className="space-y-3">
+                    <h4 className="text-sm font-semibold">Highlight Errors</h4>
+                    <div className="flex flex-col items-center space-y-2">
+                      <img 
+                        src={highlightErrorsImg} 
+                        alt="Highlight Errors Preview" 
+                        className="w-32 h-32 rounded-md border object-contain"
+                      />
+                      <p className="text-xs text-muted-foreground text-center">
+                        Shows invalid numbers highlighted in red
+                      </p>
+                    </div>
+                  </div>
+                </HoverCardContent>
+              </HoverCard>
+            </div>
 
-          <SudokuGrid 
-            initialPuzzle={currentPuzzle.puzzle}
-            selectedTool={selectedTool}
-            validationErrors={validationErrors}
-            gridData={gridData}
-            setGridData={setGridData}
-          />
-          
-          <div className="flex gap-2 flex-wrap justify-center">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
-              <Button
-                key={number}
-                onClick={() => handleNumberSelect(number)}
-                variant={selectedTool === number ? 'default' : 'outline'}
-                size="icon"
-                className="w-10 h-10 text-lg"
-              >
-                {number}
-              </Button>
-            ))}
-            <Button
-              onClick={() => handleNumberSelect('eraser')}
-              variant={selectedTool === 'eraser' ? 'default' : 'outline'}
-              size="icon"
-              className="w-10 h-10"
-              aria-label="Eraser"
-            >
-              <Eraser className="w-5 h-5" />
-            </Button>
-          </div>
-
-          <div className="flex gap-2 justify-center">
-            <Button 
-              onClick={handleSubmit}
-              variant="default"
-              size="lg"
-              className="min-w-[150px]"
-            >
-              Submit Solution
-            </Button>
+            <SudokuGrid 
+              initialPuzzle={currentPuzzle.puzzle}
+              selectedTool={selectedTool}
+              validationErrors={validationErrors}
+              gridData={gridData}
+              setGridData={setGridData}
+            />
             
-            <Button 
-              onClick={() => setIsClearAllDialogOpen(true)}
-              variant="destructive"
-              size="lg"
-              className="min-w-[100px]"
-            >
-              Clear All
-            </Button>
+            <div className="flex gap-2 flex-wrap justify-center">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((number) => (
+                <Button
+                  key={number}
+                  onClick={() => handleNumberSelect(number)}
+                  variant={selectedTool === number ? 'default' : 'outline'}
+                  size="icon"
+                  className="w-10 h-10 text-lg"
+                >
+                  {number}
+                </Button>
+              ))}
+              <Button
+                onClick={() => handleNumberSelect('eraser')}
+                variant={selectedTool === 'eraser' ? 'default' : 'outline'}
+                size="icon"
+                className="w-10 h-10"
+                aria-label="Eraser"
+              >
+                <Eraser className="w-5 h-5" />
+              </Button>
+            </div>
+
+            <div className="flex gap-2 justify-center">
+              <Button 
+                onClick={handleSubmit}
+                variant="default"
+                size="lg"
+                className="min-w-[150px]"
+              >
+                Submit Solution
+              </Button>
+              
+              <Button 
+                onClick={() => setIsClearAllDialogOpen(true)}
+                variant="destructive"
+                size="lg"
+                className="min-w-[100px]"
+              >
+                Clear All
+              </Button>
+            </div>
+
           </div>
+
+          {/* Congratulations AlertDialog */}
+          <AlertDialog open={isCongratsDialogOpen} onOpenChange={setIsCongratsDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Congratulations!</AlertDialogTitle>
+                <AlertDialogDescription>
+                  You have successfully solved the Sudoku puzzle!
+                  <br />
+                  Ready for a new challenge?
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
+                <div className="flex gap-2 justify-center w-full sm:w-auto">
+                  {(['easy', 'medium', 'hard'] as const).map((diff) => (
+                    <Button
+                      key={diff}
+                      onClick={() => {
+                        handleNewGame(diff);
+                        setIsCongratsDialogOpen(false);
+                      }}
+                      variant='outline'
+                      size="sm"
+                      className="capitalize min-w-[70px] gap-1"
+                    >
+                      {getDifficultyIcon(diff)}
+                      {diff}
+                    </Button>
+                  ))}
+                </div>
+                <AlertDialogCancel>Close</AlertDialogCancel>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Incomplete AlertDialog */}
+          <AlertDialog open={isIncompleteDialogOpen} onOpenChange={setIsIncompleteDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Puzzle Incomplete</AlertDialogTitle>
+                <AlertDialogDescription>
+                  The puzzle is not yet complete or contains errors. Keep trying!
+                  {isValidationEnabled && (
+                    <span className="block mt-2 text-xs">
+                      Tip: Error highlighting is enabled to help you spot mistakes.
+                    </span>
+                  )}
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogAction onClick={() => setIsIncompleteDialogOpen(false)}>
+                  Continue Playing
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Exit Confirmation AlertDialog */}
+          <AlertDialog open={isExitDialogOpen} onOpenChange={setIsExitDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Exit Game?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to leave? Your current progress will be lost.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Continue Playing</AlertDialogCancel>
+                <AlertDialogAction onClick={handleExit}>
+                  Exit Game
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+
+          {/* Clear All Confirmation AlertDialog */}
+          <AlertDialog open={isClearAllDialogOpen} onOpenChange={setIsClearAllDialogOpen}>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Clear All Entries?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This will remove all your entered numbers and reset the puzzle to its original state. 
+                  This action cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleClearAll} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                  Clear All
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
 
         </div>
-
-        {/* Congratulations AlertDialog */}
-        <AlertDialog open={isCongratsDialogOpen} onOpenChange={setIsCongratsDialogOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Congratulations!</AlertDialogTitle>
-              <AlertDialogDescription>
-                You have successfully solved the Sudoku puzzle!
-                <br />
-                Ready for a new challenge?
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
-              <div className="flex gap-2 justify-center w-full sm:w-auto">
-                {(['easy', 'medium', 'hard'] as const).map((diff) => (
-                  <Button
-                    key={diff}
-                    onClick={() => {
-                      handleNewGame(diff);
-                      setIsCongratsDialogOpen(false);
-                    }}
-                    variant='outline'
-                    size="sm"
-                    className="capitalize min-w-[70px] gap-1"
-                  >
-                    {getDifficultyIcon(diff)}
-                    {diff}
-                  </Button>
-                ))}
-              </div>
-              <AlertDialogCancel>Close</AlertDialogCancel>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {/* Incomplete AlertDialog */}
-        <AlertDialog open={isIncompleteDialogOpen} onOpenChange={setIsIncompleteDialogOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Puzzle Incomplete</AlertDialogTitle>
-              <AlertDialogDescription>
-                The puzzle is not yet complete or contains errors. Keep trying!
-                {isValidationEnabled && (
-                  <span className="block mt-2 text-xs">
-                    Tip: Error highlighting is enabled to help you spot mistakes.
-                  </span>
-                )}
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction onClick={() => setIsIncompleteDialogOpen(false)}>
-                Continue Playing
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {/* Exit Confirmation AlertDialog */}
-        <AlertDialog open={isExitDialogOpen} onOpenChange={setIsExitDialogOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Exit Game?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Are you sure you want to leave? Your current progress will be lost.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Continue Playing</AlertDialogCancel>
-              <AlertDialogAction onClick={handleExit}>
-                Exit Game
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
-        {/* Clear All Confirmation AlertDialog */}
-        <AlertDialog open={isClearAllDialogOpen} onOpenChange={setIsClearAllDialogOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Clear All Entries?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This will remove all your entered numbers and reset the puzzle to its original state. 
-                This action cannot be undone.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction onClick={handleClearAll} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
-                Clear All
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-
       </div>
     </div>
   );

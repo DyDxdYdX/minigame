@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { Puzzle, Grid, Gamepad2 } from "lucide-react";
+import { Square, Grid, Bomb } from "lucide-react";
 
 function Games() {
   const games = [
@@ -17,7 +17,7 @@ function Games() {
       id: "minesweeper",
       title: "Minesweeper",
       description: "Test your deduction skills in this classic game. Clear the board without hitting any mines! Three difficulty levels available.",
-      icon: Gamepad2,
+      icon: Bomb,
       difficulty: "Beginner, Intermediate, Expert",
       category: "Strategy"
     },
@@ -25,7 +25,7 @@ function Games() {
       id: "sliding-puzzle",
       title: "Sliding Puzzle",
       description: "Arrange the numbered tiles in order by sliding them into the empty space. A timeless puzzle challenge!",
-      icon: Puzzle,
+      icon: Square,
       difficulty: "Medium",
       category: "Puzzle"
     }

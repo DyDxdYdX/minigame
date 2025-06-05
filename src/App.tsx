@@ -7,6 +7,7 @@ import Home from "@/pages/Home"
 import Games from "@/pages/Games"
 import SudokuPage from "@/pages/SudokuPage"
 import MinesweeperPage from "@/pages/MinesweeperPage"
+import SlidingPuzzlePage from "@/pages/SlidingPuzzlePage"
 
 function App() {
   const location = useLocation();
@@ -24,6 +25,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/games/sudoku" element={<SudokuPage />} />
           <Route path="/games/minesweeper" element={<MinesweeperPage />} />
+          <Route path="/games/sliding-puzzle" element={<SlidingPuzzlePage />} />
         </Routes>
         {!isGamePage && <Footer />}
       </div>

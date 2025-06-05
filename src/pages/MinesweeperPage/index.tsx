@@ -14,6 +14,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export type Difficulty = 'beginner' | 'intermediate' | 'expert';
 export type CellState = 'hidden' | 'revealed' | 'flagged';
@@ -196,171 +197,177 @@ const MinesweeperPage: React.FC = () => {
   const stats = getGameStats();
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Exit Button */}
-      <div className="mb-6">
-        <Button 
-          onClick={() => setIsExitDialogOpen(true)}
-          variant="outline" 
-          size="sm" 
-          className="gap-2"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          Back to Games
-        </Button>
-      </div>
-
-      <h1 className="text-3xl font-bold text-center mb-8">Minesweeper</h1>
-      
-      <div className="flex flex-col items-center gap-6">
-        {/* Difficulty Buttons */}
-        <div className="flex gap-2 flex-wrap justify-center">
-          {(['beginner', 'intermediate', 'expert'] as const).map((diff) => (
-            <Button
-              key={diff}
-              onClick={() => handleNewGame(diff)}
-              variant={difficulty === diff ? 'default' : 'outline'}
-              size="sm"
-              className={`capitalize min-w-[100px] gap-2 transition-all duration-200
-                ${difficulty === diff 
-                  ? 'shadow-md scale-105' 
-                  : 'hover:scale-105 hover:shadow-sm'}`}
+    <div className="min-h-screen flex flex-col">
+      <header className="sticky top-0 z-30 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container mx-auto py-4">
+          <div className="flex items-center justify-between">
+            <Button 
+              onClick={() => setIsExitDialogOpen(true)}
+              variant="ghost" 
+              size="sm" 
+              className="gap-2"
             >
-              {getDifficultyIcon(diff)}
-              {diff}
+              <ArrowLeft className="w-4 h-4" />
+              Back to Games
             </Button>
-          ))}
-        </div>
-
-        {/* Game Stats and Reset Button */}
-        <div className="flex items-center gap-8">
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              <Bomb className="w-5 h-5 text-red-500" />
-              <span className="text-lg font-bold">
-                {gameState.mineCount - gameState.flagCount}
-              </span>
-            </div>
-            <span className="text-sm text-muted-foreground">Mines</span>
-          </div>
-
-          {/* Reset Button with Icon Face */}
-          <Button
-            onClick={handleReset}
-            variant="outline"
-            size="lg"
-            className="min-w-[60px] h-[60px] rounded-lg border-2 p-2"
-          >
-            {getGameStatusIcon()}
-          </Button>
-          
-          <div className="flex flex-col items-center gap-1">
-            <div className="flex items-center gap-2">
-              <Timer className="w-5 h-5 text-blue-500" />
-              <span className="text-lg font-bold">
-                {formatTime(gameState.time)}
-              </span>
-            </div>
-            <span className="text-sm text-muted-foreground">Time</span>
+            <ThemeToggle />
           </div>
         </div>
+      </header>
 
-        {/* Instructions */}
-        <div className="text-center text-sm text-muted-foreground max-w-md">
-          <p className="mb-1">
-            <span className="font-semibold">Left click</span> to reveal • <span className="font-semibold">Right click</span> to flag
-          </p>
+      <div className="container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold text-center mb-8">Minesweeper</h1>
+        
+        <div className="flex flex-col items-center gap-6">
+          {/* Difficulty Buttons */}
+          <div className="flex gap-2 flex-wrap justify-center">
+            {(['beginner', 'intermediate', 'expert'] as const).map((diff) => (
+              <Button
+                key={diff}
+                onClick={() => handleNewGame(diff)}
+                variant={difficulty === diff ? 'default' : 'outline'}
+                size="sm"
+                className={`capitalize min-w-[100px] gap-2 transition-all duration-200
+                  ${difficulty === diff 
+                    ? 'shadow-md scale-105' 
+                    : 'hover:scale-105 hover:shadow-sm'}`}
+              >
+                {getDifficultyIcon(diff)}
+                {diff}
+              </Button>
+            ))}
+          </div>
+
+          {/* Game Stats and Reset Button */}
+          <div className="flex items-center gap-8">
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <Bomb className="w-5 h-5 text-red-500" />
+                <span className="text-lg font-bold">
+                  {gameState.mineCount - gameState.flagCount}
+                </span>
+              </div>
+              <span className="text-sm text-muted-foreground">Mines</span>
+            </div>
+
+            {/* Reset Button with Icon Face */}
+            <Button
+              onClick={handleReset}
+              variant="outline"
+              size="lg"
+              className="min-w-[60px] h-[60px] rounded-lg border-2 p-2"
+            >
+              {getGameStatusIcon()}
+            </Button>
+            
+            <div className="flex flex-col items-center gap-1">
+              <div className="flex items-center gap-2">
+                <Timer className="w-5 h-5 text-blue-500" />
+                <span className="text-lg font-bold">
+                  {formatTime(gameState.time)}
+                </span>
+              </div>
+              <span className="text-sm text-muted-foreground">Time</span>
+            </div>
+          </div>
+
+          {/* Instructions */}
+          <div className="text-center text-sm text-muted-foreground max-w-md">
+            <p className="mb-1">
+              <span className="font-semibold">Left click</span> to reveal • <span className="font-semibold">Right click</span> to flag
+            </p>
+          </div>
+
+          {/* Game Grid */}
+          <div className="flex justify-center">
+            <MinesweeperGrid 
+              gameState={gameState}
+              setGameState={setGameState}
+              onGameWon={onGameWon}
+              onGameLost={onGameLost}
+              onGameStart={onGameStart}
+              difficulty={difficulty}
+            />
+          </div>
         </div>
 
-        {/* Game Grid */}
-        <div className="flex justify-center">
-          <MinesweeperGrid 
-            gameState={gameState}
-            setGameState={setGameState}
-            onGameWon={onGameWon}
-            onGameLost={onGameLost}
-            onGameStart={onGameStart}
-            difficulty={difficulty}
-          />
-        </div>
+        {/* Win Statistics Dialog */}
+        <AlertDialog open={isWinDialogOpen} onOpenChange={setIsWinDialogOpen}>
+          <AlertDialogContent className="max-w-md">
+            <AlertDialogHeader>
+              <AlertDialogTitle className="flex items-center gap-2 text-xl">
+                <Smile className="w-6 h-6 text-yellow-500" />
+                Congratulations!
+              </AlertDialogTitle>
+              <AlertDialogDescription className="text-base">
+                You successfully cleared the minefield!
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            
+            {stats && (
+              <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-muted rounded-lg">
+                    <div className="text-2xl font-bold text-primary">{stats.time}</div>
+                    <div className="text-sm text-muted-foreground">Time</div>
+                  </div>
+                  <div className="text-center p-3 bg-muted rounded-lg">
+                    <div className="text-2xl font-bold text-primary">{stats.difficulty}</div>
+                    <div className="text-sm text-muted-foreground">Difficulty</div>
+                  </div>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="text-center p-3 bg-muted rounded-lg">
+                    <div className="text-2xl font-bold text-primary">{stats.mines}</div>
+                    <div className="text-sm text-muted-foreground">Mines</div>
+                  </div>
+                  <div className="text-center p-3 bg-muted rounded-lg">
+                    <div className="text-2xl font-bold text-primary">{stats.accuracy}%</div>
+                    <div className="text-sm text-muted-foreground">Accuracy</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
+              <div className="flex gap-2 justify-center w-full sm:w-auto">
+                {(['beginner', 'intermediate', 'expert'] as const).map((diff) => (
+                  <Button
+                    key={diff}
+                    onClick={() => handleNewGame(diff)}
+                    variant='outline'
+                    size="sm"
+                    className="capitalize min-w-[80px] gap-1"
+                  >
+                    {getDifficultyIcon(diff)}
+                    {diff}
+                  </Button>
+                ))}
+              </div>
+              <AlertDialogCancel>Close</AlertDialogCancel>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        {/* Exit Confirmation Dialog - Only navigation dialog kept */}
+        <AlertDialog open={isExitDialogOpen} onOpenChange={setIsExitDialogOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Exit Game?</AlertDialogTitle>
+              <AlertDialogDescription>
+                Are you sure you want to leave? Your current progress will be lost.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Continue Playing</AlertDialogCancel>
+              <AlertDialogAction onClick={handleExit}>
+                Exit Game
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       </div>
-
-      {/* Win Statistics Dialog */}
-      <AlertDialog open={isWinDialogOpen} onOpenChange={setIsWinDialogOpen}>
-        <AlertDialogContent className="max-w-md">
-          <AlertDialogHeader>
-            <AlertDialogTitle className="flex items-center gap-2 text-xl">
-              <Smile className="w-6 h-6 text-yellow-500" />
-              Congratulations!
-            </AlertDialogTitle>
-            <AlertDialogDescription className="text-base">
-              You successfully cleared the minefield!
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          
-          {stats && (
-            <div className="space-y-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold text-primary">{stats.time}</div>
-                  <div className="text-sm text-muted-foreground">Time</div>
-                </div>
-                <div className="text-center p-3 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold text-primary">{stats.difficulty}</div>
-                  <div className="text-sm text-muted-foreground">Difficulty</div>
-                </div>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center p-3 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold text-primary">{stats.mines}</div>
-                  <div className="text-sm text-muted-foreground">Mines</div>
-                </div>
-                <div className="text-center p-3 bg-muted rounded-lg">
-                  <div className="text-2xl font-bold text-primary">{stats.accuracy}%</div>
-                  <div className="text-sm text-muted-foreground">Accuracy</div>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
-            <div className="flex gap-2 justify-center w-full sm:w-auto">
-              {(['beginner', 'intermediate', 'expert'] as const).map((diff) => (
-                <Button
-                  key={diff}
-                  onClick={() => handleNewGame(diff)}
-                  variant='outline'
-                  size="sm"
-                  className="capitalize min-w-[80px] gap-1"
-                >
-                  {getDifficultyIcon(diff)}
-                  {diff}
-                </Button>
-              ))}
-            </div>
-            <AlertDialogCancel>Close</AlertDialogCancel>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-
-      {/* Exit Confirmation Dialog - Only navigation dialog kept */}
-      <AlertDialog open={isExitDialogOpen} onOpenChange={setIsExitDialogOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Exit Game?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to leave? Your current progress will be lost.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Continue Playing</AlertDialogCancel>
-            <AlertDialogAction onClick={handleExit}>
-              Exit Game
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };
