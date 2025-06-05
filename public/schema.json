@@ -1,0 +1,79 @@
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "MiniGame",
+  "alternateName": "MiniGame by DyDxSoft",
+  "url": "https://minigame.dydxsoft.my/",
+  "description": "Free online mini games collection including Sudoku, Minesweeper, and Sliding Puzzle games",
+  "inLanguage": "en-US",
+  "isAccessibleForFree": true,
+  "publisher": {
+    "@type": "Organization",
+    "name": "DyDxSoft",
+    "url": "https://minigame.dydxsoft.my/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://minigame.dydxsoft.my/favicon.png"
+    }
+  },
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "https://minigame.dydxsoft.my/games",
+    "query-input": "required name=search_term_string"
+  },
+  "mainEntity": [
+    {
+      "@type": "Game",
+      "name": "Sudoku",
+      "url": "https://minigame.dydxsoft.my/games/sudoku",
+      "description": "Free online Sudoku game with multiple difficulty levels",
+      "genre": "Puzzle",
+      "gamePlatform": "Web Browser",
+      "operatingSystem": "Any",
+      "applicationCategory": "Game",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "Game",
+      "name": "Minesweeper",
+      "url": "https://minigame.dydxsoft.my/games/minesweeper",
+      "description": "Classic Minesweeper game with three difficulty levels",
+      "genre": "Strategy",
+      "gamePlatform": "Web Browser",
+      "operatingSystem": "Any",
+      "applicationCategory": "Game",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "Game",
+      "name": "Sliding Puzzle",
+      "url": "https://minigame.dydxsoft.my/games/sliding-puzzle",
+      "description": "Classic sliding tile puzzle game with multiple grid sizes",
+      "genre": "Puzzle",
+      "gamePlatform": "Web Browser",
+      "operatingSystem": "Any",
+      "applicationCategory": "Game",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+  ],
+  "audience": {
+    "@type": "Audience",
+    "audienceType": "Gamers, Puzzle Enthusiasts, Casual Players"
+  },
+  "keywords": "free games, online games, mini games, sudoku, minesweeper, sliding puzzle, browser games, puzzle games, strategy games, no download games"
+}

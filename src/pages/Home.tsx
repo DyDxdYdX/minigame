@@ -1,10 +1,13 @@
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Link } from "react-router-dom"
+import { SEOHead, seoConfigs } from "@/components/seo-head"
 
 function Home() {
   return (
-    <main className="flex-1 flex flex-col items-center justify-center w-full max-w-6xl mx-auto py-12 px-4"> 
+    <>
+      <SEOHead {...seoConfigs.home} />
+      <main className="flex-1 flex flex-col items-center justify-center w-full max-w-6xl mx-auto py-12 px-4">
       <section className="text-center space-y-6 mb-16">
         <h2 className="text-4xl font-bold tracking-tight sm:text-6xl">
           Welcome to minigame
@@ -51,7 +54,8 @@ function Home() {
           </CardContent>
         </Card>
       </section>
-    </main>
+      </main>
+    </>
   )
 }
 

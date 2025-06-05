@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter }
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Square, Grid, Bomb } from "lucide-react";
+import { SEOHead, seoConfigs } from "@/components/seo-head";
 
 function Games() {
   const games = [
@@ -32,7 +33,9 @@ function Games() {
   ];
 
   return (
-    <main className="flex-1 flex flex-col items-center w-full max-w-6xl mx-auto py-12 px-4">
+    <>
+      <SEOHead {...seoConfigs.games} />
+      <main className="flex-1 flex flex-col items-center w-full max-w-6xl mx-auto py-12 px-4">
       <div className="w-full space-y-8">
         <div className="text-center space-y-4">
           <h1 className="text-4xl font-bold">Available Games</h1>
@@ -73,7 +76,8 @@ function Games() {
           <p>More games coming soon! Stay tuned for updates.</p>
         </div>
       </div>
-    </main>
+      </main>
+    </>
   );
 }
 

@@ -1,6 +1,35 @@
-# Allow all crawlers
+# Robots.txt for MiniGame - Free Online Games
+# Allow all crawlers to index the site
 User-agent: *
 Allow: /
 
+# Specific rules for major search engines
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Slurp
+Allow: /
+Crawl-delay: 1
+
+# Block access to source maps and development files
+Disallow: /*.map$
+Disallow: /src/
+Disallow: /node_modules/
+Disallow: /.git/
+Disallow: /*.json$
+
+# Allow important files
+Allow: /manifest.json
+Allow: /sitemap.xml
+Allow: /robots.txt
+
 # Sitemap location
 Sitemap: https://minigame.dydxsoft.my/sitemap.xml
+
+# Host declaration
+Host: https://minigame.dydxsoft.my
