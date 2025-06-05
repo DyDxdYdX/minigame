@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MiniGame - Redirecting...</title>
+    
+    <!-- This script will redirect all 404 requests to index.html for client-side routing -->
+    <script>
+      // Store the current path and search parameters
+      const currentPath = window.location.pathname;
+      const currentSearch = window.location.search;
+      const currentHash = window.location.hash;
+      
+      // Redirect to index.html with the original path as a parameter
+      // This allows React Router to handle the routing on the client side
+      const redirectUrl = '/index.html?redirect=' + encodeURIComponent(currentPath + currentSearch + currentHash);
+      window.location.replace(redirectUrl);
+    </script>
+  </head>
+  <body>
+    <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+      <h2>Redirecting...</h2>
+      <p>If you are not redirected automatically, <a href="/">click here</a>.</p>
+    </div>
+  </body>
+</html>
