@@ -151,8 +151,7 @@ export function moveTileLine(puzzleState: PuzzleState, tileIndex: number, size: 
 
   if (rowClicked === rowEmpty) {
     // Same row: move all tiles between clicked and empty (left or right)
-    const start = Math.min(colClicked, colEmpty);
-    const end = Math.max(colClicked, colEmpty);
+
     if (colClicked < colEmpty) {
       // Move right: shift tiles right
       for (let c = colEmpty; c > colClicked; c--) {
@@ -170,8 +169,7 @@ export function moveTileLine(puzzleState: PuzzleState, tileIndex: number, size: 
     }
   } else if (colClicked === colEmpty) {
     // Same column: move all tiles between clicked and empty (up or down)
-    const start = Math.min(rowClicked, rowEmpty);
-    const end = Math.max(rowClicked, rowEmpty);
+
     if (rowClicked < rowEmpty) {
       // Move down: shift tiles down
       for (let r = rowEmpty; r > rowClicked; r--) {

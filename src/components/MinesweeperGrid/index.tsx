@@ -280,7 +280,7 @@ const MinesweeperGrid: React.FC<MinesweeperGridProps> = ({
   };
 
   // Get cell styling - Traditional minesweeper look
-  const getCellClassName = (cell: Cell, row: number, col: number) => {
+  const getCellClassName = (cell: Cell) => {
     const baseClasses = "flex items-center justify-center font-mono select-none transition-all duration-100";
     
     // Responsive cell sizing
@@ -364,7 +364,7 @@ const MinesweeperGrid: React.FC<MinesweeperGridProps> = ({
           row.map((cell, colIndex) => (
             <div
               key={`${rowIndex}-${colIndex}`}
-              className={getCellClassName(cell, rowIndex, colIndex)}
+              className={getCellClassName(cell)}
               onClick={() => handleLeftClick(rowIndex, colIndex)}
               onContextMenu={(e) => handleRightClick(e, rowIndex, colIndex)}
               style={{

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import MinesweeperGrid from '../../components/MinesweeperGrid';
 import { Button } from "@/components/ui/button";
 import { Bomb, ArrowLeft, Timer, Star, StarHalf, StarOff, Smile, Frown, Meh } from 'lucide-react';
-import { cn } from "@/lib/utils";
+
 import { useNavigate } from "react-router-dom";
 import {
   AlertDialog,

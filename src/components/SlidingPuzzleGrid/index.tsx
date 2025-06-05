@@ -68,15 +68,13 @@ const SlidingPuzzleGrid: React.FC<SlidingPuzzleGridProps> = ({
     };
   };
 
-  const getIndexFromRowCol = (row: number, col: number) => {
-    return row * size + col;
-  };
+
 
   const handleMouseDown = (e: React.MouseEvent, index: number) => {
     if (tiles[index] === 0 || !validMoves.includes(index)) return;
     
     e.preventDefault();
-    const rect = e.currentTarget.getBoundingClientRect();
+
     const startPos = {
       x: e.clientX,
       y: e.clientY
@@ -111,11 +109,11 @@ const SlidingPuzzleGrid: React.FC<SlidingPuzzleGridProps> = ({
     }));
   };
 
-  const handleMouseUp = (e: MouseEvent) => {
+  const handleMouseUp = () => {
     if (!dragState.isDragging) return;
 
     const tileSize = getTileSize();
-    const gap = 4; // gap-1 = 4px
+
     const threshold = tileSize / 2;
     
     const { dragOffset } = dragState;
